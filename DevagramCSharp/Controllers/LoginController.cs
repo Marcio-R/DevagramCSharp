@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DevagramCSharp.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class LoginController : ControllerBase
     {
 
@@ -17,7 +17,6 @@ namespace DevagramCSharp.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
         public IActionResult EfetuarLogin([FromBody] LoginRequisicaoDto loginrequisicao)
         {
             try
