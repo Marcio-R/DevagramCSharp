@@ -1,6 +1,8 @@
 ﻿using DevagramCSharp.Dtos;
 using DevagramCSharp.Models;
+using DevagramCSharp.Repository;
 using DevagramCSharp.Service;
+using DevagramCSharp.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,13 +14,16 @@ namespace DevagramCSharp.Controllers
     {
 
         private readonly ILogger<LoginController> _logger;
+        public readonly IUsuarioRepository _usuarioRepository;
 
-        public LoginController(ILogger<LoginController> logger)
+        public LoginController(ILogger<LoginController> logger, IUsuarioRepository usuarioRepository)
         {
             _logger = logger;
+            _usuarioRepository = usuarioRepository;
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public IActionResult EfetuarLogin([FromBody] LoginRequisicaoDto loginrequisicao)
         {
             try
@@ -26,23 +31,17 @@ namespace DevagramCSharp.Controllers
                 if (!String.IsNullOrEmpty(loginrequisicao.Senha) && !String.IsNullOrEmpty(loginrequisicao.Email) &&
                     !String.IsNullOrWhiteSpace(loginrequisicao.Senha) && !String.IsNullOrWhiteSpace(loginrequisicao.Email))
                 {
-                    string email = "marcio@gmail.com";
-                    string senha = "senha123";
+                    Usuario usuario = _usuarioRepository.GetUsuarioPorLoginSenha(loginrequisicao.Email.ToLower(), MD5Utils.GerarHashMD5(loginrequisicao.Senha));
 
-                    if (loginrequisicao.Email == email && loginrequisicao.Senha == senha)
+                    if (usuario != null)
                     {
-                        Usuario usuario = new Usuario()
-                        {
-                            Email = loginrequisicao.Email,
-                            Id = 12,
-                            Nome = "Marcio Alves"
-                        };
                         return Ok(new LoginRespostaDto()
                         {
                             Email = usuario.Email,
                             Nome = usuario.Nome,
                             Token = TokenService.CriarToken(usuario)
-                        }); 
+                        });
+
                     }
                     else
                     {
@@ -52,6 +51,7 @@ namespace DevagramCSharp.Controllers
                             Status = StatusCodes.Status400BadRequest
                         });
                     }
+
                 }
                 else
                 {
