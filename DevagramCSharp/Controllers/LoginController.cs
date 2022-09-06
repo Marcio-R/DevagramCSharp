@@ -42,7 +42,7 @@ namespace DevagramCSharp.Controllers
                             Email = usuario.Email,
                             Nome = usuario.Nome,
                             Token = TokenService.CriarToken(usuario)
-                        }); ;
+                        }); 
                     }
                     else
                     {
