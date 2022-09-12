@@ -1,8 +1,8 @@
 ﻿namespace DevagramCSharp.Dtos
 {
-    public class UsuarioRespostaDto
+    public class ImagemDto
     {
-        public string Email { get; set; }
         public string Nome { get; set; }
+        public IFormFile Imagem { get; set; }
     }
 }

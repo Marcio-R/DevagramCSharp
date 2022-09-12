@@ -1,6 +1,7 @@
 ﻿using DevagramCSharp.Dtos;
 using DevagramCSharp.Models;
 using DevagramCSharp.Repository;
+using DevagramCSharp.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,7 +34,7 @@ namespace DevagramCSharp.Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError("Ocorreu um erro ao obter o ");
+                _logger.LogError("Ocorreu um erro ao obter o usuário");
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErroRespostasDto()
                 {
                     Descricao = $"Ocorreu o seguinte erro: {e.Message}",
@@ -44,22 +45,24 @@ namespace DevagramCSharp.Controllers
         }
         [HttpPost]
         [AllowAnonymous]
-        public IActionResult SalvarUsuaio([FromBody] Usuario usuario)
+        public IActionResult SalvarUsuaio([FromForm] UsuarioRequisicaoDto usuariodto)
         {
             try
             {
-                if (usuario != null)
+
+
+                if (usuariodto != null)
                 {
                     var erros = new List<string>();
-                    if (string.IsNullOrEmpty(usuario.Nome) || string.IsNullOrWhiteSpace(usuario.Nome))
+                    if (string.IsNullOrEmpty(usuariodto.Nome) || string.IsNullOrWhiteSpace(usuariodto.Nome))
                     {
                         erros.Add("Nome inválido");
                     }
-                    if (string.IsNullOrEmpty(usuario.Email) || string.IsNullOrWhiteSpace(usuario.Email) || !usuario.Email.Contains("@"))
+                    if (string.IsNullOrEmpty(usuariodto.Email) || string.IsNullOrWhiteSpace(usuariodto.Email) || !usuariodto.Email.Contains("@"))
                     {
                         erros.Add("E-mail inválido");
                     }
-                    if (string.IsNullOrEmpty(usuario.Senha) || string.IsNullOrWhiteSpace(usuario.Senha))
+                    if (string.IsNullOrEmpty(usuariodto.Senha) || string.IsNullOrWhiteSpace(usuariodto.Senha))
                     {
                         erros.Add("Senha inválida");
                     }
@@ -72,6 +75,18 @@ namespace DevagramCSharp.Controllers
                             Erros = erros
                         });
                     }
+
+                    CosmicService cosmicservice = new CosmicService();
+
+                    Usuario usuario = new Usuario()
+                    {
+                        Email = usuariodto.Email,
+                        Senha = usuariodto.Senha,
+                        Nome = usuariodto.Nome,
+                        FotoPerfil = cosmicservice.EnviarImagem(new ImagemDto { Imagem = usuariodto.FotoPerfil,Nome = usuariodto.Nome.Replace(" ","")})
+                    };
+
+
 
                     usuario.Senha = Utils.MD5Utils.GerarHashMD5(usuario.Senha);
                     usuario.Email = usuario.Email.ToLower();
