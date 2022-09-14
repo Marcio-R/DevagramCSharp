@@ -13,7 +13,7 @@ namespace DevagramCSharp.Controllers
     {
         public readonly ILogger<UsuarioController> _logger;
 
-        public UsuarioController(ILogger<UsuarioController> logger, IUsuarioRepository usuarioRepository): base(usuarioRepository)
+        public UsuarioController(ILogger<UsuarioController> logger, IUsuarioRepository usuarioRepository) : base(usuarioRepository)
         {
             _logger = logger;
         }
@@ -43,13 +43,60 @@ namespace DevagramCSharp.Controllers
             }
 
         }
+
+        [HttpPut]
+        public IActionResult AtualizarUsuario([FromForm] UsuarioRequisicaoDto usuariodto)
+        {
+            try
+            {
+                Usuario usuario = LerToken();
+
+                if (usuariodto != null)
+                {
+                    var erros = new List<string>();
+                    if (string.IsNullOrEmpty(usuariodto.Nome) || string.IsNullOrWhiteSpace(usuariodto.Nome))
+                    {
+                        erros.Add("Nome inválido");
+                    }
+
+                    if (erros.Count > 0)
+                    {
+                        return BadRequest(new ErroRespostasDto()
+                        {
+                            Status = StatusCodes.Status400BadRequest,
+                            Erros = erros
+                        });
+                    }
+                    else
+                    {
+                        CosmicService cosmicservice = new CosmicService();
+
+                        usuario.Nome = usuariodto.Nome;
+                        usuario.FotoPerfil = cosmicservice.EnviarImagem(new ImagemDto { Imagem = usuariodto.FotoPerfil, Nome = usuariodto.Nome.Replace(" ", "") });
+                        _usuarioRepository.AtualizarUsuario(usuario);
+                    }
+
+                }
+                return Ok("Usuário salvo e atualizado!");
+            }
+            catch (Exception e)
+            {
+
+                _logger.LogError("Ocorreu um erro ao Salvar o usuario ");
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErroRespostasDto()
+                {
+                    Descricao = $"Ocorreu o seguinte erro: {e.Message}",
+                    Status = StatusCodes.Status500InternalServerError
+                });
+            }
+        }
+
         [HttpPost]
         [AllowAnonymous]
         public IActionResult SalvarUsuaio([FromForm] UsuarioRequisicaoDto usuariodto)
         {
             try
             {
-
 
                 if (usuariodto != null)
                 {
@@ -83,10 +130,8 @@ namespace DevagramCSharp.Controllers
                         Email = usuariodto.Email,
                         Senha = usuariodto.Senha,
                         Nome = usuariodto.Nome,
-                        FotoPerfil = cosmicservice.EnviarImagem(new ImagemDto { Imagem = usuariodto.FotoPerfil,Nome = usuariodto.Nome.Replace(" ","")})
+                        FotoPerfil = cosmicservice.EnviarImagem(new ImagemDto { Imagem = usuariodto.FotoPerfil, Nome = usuariodto.Nome.Replace(" ", "") })
                     };
-
-
 
                     usuario.Senha = Utils.MD5Utils.GerarHashMD5(usuario.Senha);
                     usuario.Email = usuario.Email.ToLower();

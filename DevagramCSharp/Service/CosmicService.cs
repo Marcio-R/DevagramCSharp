@@ -23,7 +23,7 @@ namespace DevagramCSharp.Service
             var retornoReq = client.PostAsync("https://upload.cosmicjs.com/v2/buckets/devmarcio-devagram/media", request.Content).Result;
 
             var urlretorno = retornoReq.Content.ReadFromJsonAsync<CosmicRespostaDto>();
-            return urlretorno.Result.Media.url;
+            return urlretorno.Result.media.url;
         }
     }
 }

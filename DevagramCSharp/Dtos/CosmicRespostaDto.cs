@@ -2,6 +2,6 @@
 {
     public class CosmicRespostaDto
     {
-        public CosmicMediaDto Media { get; set; }
+        public CosmicMediaDto media { get; set; }
 }
 }
