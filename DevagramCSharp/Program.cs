@@ -19,6 +19,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRespositoryImp>();
+builder.Services.AddScoped<ISeguidorRepository, SeguidorRepositoryImp>();
 
 var chaveCriptografia = Encoding.ASCII.GetBytes(ChaveJWT.ChaveSecreta);
 builder.Services.AddAuthentication(x =>

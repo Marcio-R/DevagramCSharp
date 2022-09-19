@@ -15,5 +15,6 @@ namespace DevagramCSharp.Data
         }
 
         public DbSet<Usuario> Usuario { get; set; } = default!;
+        public DbSet<Seguidor> Seguidores { get; set; } = default!;
     }
 }
