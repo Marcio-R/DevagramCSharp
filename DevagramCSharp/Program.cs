@@ -21,6 +21,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRespositoryImp>();
 builder.Services.AddScoped<ISeguidorRepository, SeguidorRepositoryImp>();
 builder.Services.AddScoped<IPublicacaoRepository, PublicacaoRepositoryImpl>();
+builder.Services.AddScoped<IComentarioRepository, ComentarioRepositoryImp>();
 
 var chaveCriptografia = Encoding.ASCII.GetBytes(ChaveJWT.ChaveSecreta);
 builder.Services.AddAuthentication(x =>
