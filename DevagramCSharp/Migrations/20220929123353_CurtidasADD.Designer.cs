@@ -4,6 +4,7 @@ using DevagramCSharp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DevagramCSharp.Migrations
 {
     [DbContext(typeof(DevagramCSharpContext))]
-    partial class DevagramCSharpContextModelSnapshot : ModelSnapshot
+    [Migration("20220929123353_CurtidasADD")]
+    partial class CurtidasADD
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
