@@ -5,5 +5,6 @@ namespace DevagramCSharp.Repository
     public interface IComentarioRepository
     {
         public void Comentar(Comentario comentario);
+        List<Comentario> GetComentarioPublicacao(int idPublicacao);
     }
 }

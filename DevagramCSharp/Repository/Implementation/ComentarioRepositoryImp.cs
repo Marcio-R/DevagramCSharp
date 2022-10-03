@@ -17,5 +17,9 @@ namespace DevagramCSharp.Repository.Implementation
             _context.Add(comentario);
             _context.SaveChanges();
         }
+        public List<Comentario> GetComentarioPublicacao(int idPublicacao)
+        {
+            return _context.Comentarios.Where(c => c.IdPublicacao == idPublicacao).ToList();
+        }
     }
 }
